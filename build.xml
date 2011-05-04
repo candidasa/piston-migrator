@@ -50,7 +50,7 @@ phing help
 	</target>
 
 	<!-- task to rewrite the svn externals list to not include the modules that will be replaced by piston -->
-	<target name="svnReplaceExternals" depends="checkExternalsMappingsExist">
+	<target name="svnReplaceExternals" depends="checkExternalsMappingsExist" if="svnPregReplaceCommand,foldersToRemove,pistonCommands">
 		<echo msg="Will preg_replace the following in the svn:externals file: ${svnPregReplaceCommand}"/>
 		<echo msg="Will delete the following folders: ${foldersToRemove}"/>
 		<echo msg="Will commit the updated externals: svn commit -m 'API-CHANGE: removing externals: ${foldersToRemove}'"/>
