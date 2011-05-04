@@ -31,5 +31,6 @@ Here is what the script does:
 
 	* remove externals from svn:externals
 	* delete the externals' folders
-	* commit the updated svn:externals
+	* commit the removed svn:externals
 	* run the piston import commands to import the new code
+	* commit the new git/piston imported externals

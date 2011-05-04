@@ -66,11 +66,14 @@ phing help
 				<!-- delete svn external folders -->
 				<foreach list="${foldersToRemove}" param="dir" target="deleteFolderTask" delimiter="," />
 
-				<!-- commit new externals -->
-				<svnCommitExternalsTask base="${basedirParent}" list="${foldersToRemove}"/>
+				<!-- commit removed externals -->
+				<svnCommitExternalsTask base="${basedirParent}" list="${foldersToRemove}" add="false"/>
 		
 				<!-- import the new externals using piston -->
 				<foreach list="${pistonCommands}" param="pistonCommand" target="pistonImportTask" delimiter="`" />
+
+				<!-- commit new externals from git/piston -->
+				<svnCommitExternalsTask base="${basedirParent}" list="${foldersToRemove}" add="true"/>
 			</then>
 			<else>
 				<echo msg="Aborting"/>
