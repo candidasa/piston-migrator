@@ -23,8 +23,9 @@ class svnCommitExternalsTask extends Task {
 		$command = "svn commit -m \"API-CHANGE: removing externals: $this->list\"";
 		
 		echo("Committing externals change: $command\n");
-		//$output = exec($command);
-		//echo $output."\n";
+		exec("svn cleanup");
+		$output = exec($command);
+		echo $output."\n";
 
 		chdir($cwd);
 	}

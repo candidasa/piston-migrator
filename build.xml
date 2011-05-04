@@ -33,9 +33,8 @@ phing help
 	</target>
 
 	<target name="pistonImportTask" if="pistonCommand">
-		<!--<exec command="${pistonCommand}" dir="${basedirParent}" outputProperty="piston1" checkreturn="false" />
-		<echo msg="Piston import complete ${piston1}"/>-->
-		<echo msg="Piston command: ${pistonCommand}"/>
+		<exec command="${pistonCommand}" dir="${basedirParent}" outputProperty="piston1" checkreturn="false" />
+		<echo msg="Piston import complete ${piston1}"/>
 	</target>
 
 	<!-- MAIN CALLABLE TARGETS START HERE -->
@@ -65,13 +64,13 @@ phing help
 				<svnRemoveExternalsTask externals="${externals1}" regex="${svnPregReplaceCommand}" base="${basedirParent}" />
 
 				<!-- delete svn external folders -->
-				<foreach list="${foldersToRemove}" param="dir" target="deleteFolderTask" />
+				<foreach list="${foldersToRemove}" param="dir" target="deleteFolderTask" delimiter="," />
 
 				<!-- commit new externals -->
 				<svnCommitExternalsTask base="${basedirParent}" list="${foldersToRemove}"/>
 		
 				<!-- import the new externals using piston -->
-				<foreach list="${pistonCommands}" param="pistonCommand" target="pistonImportTask" delimiter="\n" />
+				<foreach list="${pistonCommands}" param="pistonCommand" target="pistonImportTask" delimiter="`" />
 			</then>
 			<else>
 				<echo msg="Aborting"/>

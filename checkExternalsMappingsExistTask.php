@@ -116,7 +116,7 @@ class checkExternalsMappingsExistTask extends Task {
 		//generate the piston commands to run to import new modules
 		$pistonCommands = array();
 		foreach($externalsArray as $mname => $frb) {
-			$pistonCommands[] = "piston import --commit ".$mnameToBranchName[$mname]." ".$mappingsArray[$mname];
+			$pistonCommands[] = "piston import --force --commit ".$mnameToBranchName[$mname]." ".$mappingsArray[$mname]." ".$frb['folder'];
 		}
 
 		//make a list of all the obsolete svn folders to delete
@@ -134,7 +134,7 @@ class checkExternalsMappingsExistTask extends Task {
 		//$serial = $this->serializeExternals($externalsArray);
 
 		$this->project->setProperty('foldersToRemove',implode(",",$foldersToRemove));
-		$this->project->setProperty('pistonCommands',implode("\n",$pistonCommands));
+		$this->project->setProperty('pistonCommands',implode("`",$pistonCommands));
 		$this->project->setProperty('svnPregReplaceCommand',$svnPregReplaceCommand);
 	}
 }

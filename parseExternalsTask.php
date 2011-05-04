@@ -20,6 +20,8 @@ class parseExternalsTask extends Task {
 			//backtick separated list of externals
 			$matches['module'] = trim($matches['module'],' /');
 			$matches['folder'] = trim($matches['folder'],' /');
+			$matches['revision'] = trim($matches['revision'],' /');
+			$matches['branch'] = trim($matches['branch'],' /');
 			$parsed[] = "$matches[module]`$matches[folder]`$matches[revision]`$matches[branch]";
 		}
 
