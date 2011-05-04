@@ -10,7 +10,7 @@ If a project is on its own project branch, then migrating to Piston is difficult
 
 Ideally, we combined this work with upgrading of the project to the latest version of SilverStripe. So, best to propose an upgrade to the client.
 
-The way to handle switching from a project branch is to first change the svn:externals to a public branch (on github), then run the script, then re-apply all the commits in the project branch, as necessary.
+The way to handle switching from a project branch is to first change the svn:externals to a branch or tag (who's equivalent can be found on github), then run the script, then re-apply all the commits in the project branch, as necessary.
 
 ## Installation
 Install this script by running the following commands:
