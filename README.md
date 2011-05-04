@@ -27,7 +27,7 @@ Here is what the script does:
 - Scans externals to see which have equivalent git repositories with the same branch/tag used in the external
 - Generates all the commands to run to swap the externals to git/piston
 - Displays a list of the commands it will run, asking for confirmation
-- Runs the commands:
+- Runs the commands to do the following:
 
 	* remove externals from svn:externals
 	* delete the externals' folders
