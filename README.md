@@ -14,11 +14,13 @@ The way to handle switching from a project branch is to first change the svn:ext
 
 ## Installation
 Install this script by running the following commands:
-  sudo pear install phing
-  git clone git://github.com/candidasa/piston-migrator.git piston-migrator
+
+	sudo pear install phing
+	git clone git://github.com/candidasa/piston-migrator.git piston-migrator
 
 Then run the script by running:
-  phing -f piston-migrator/build.xml
+
+	phing -f piston-migrator/build.xml
 
 ## Script
 Here is what the script does:
