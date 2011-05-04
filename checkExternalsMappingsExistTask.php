@@ -64,6 +64,17 @@ class checkExternalsMappingsExistTask extends Task {
 		return false;
 	}
 
+	protected function lsRemoteLookup($gitURL, $branch) {
+		$output = null;
+		exec("git ls-remote $gitURL",$output);
+
+		$matches = array();
+		$c = preg_match('/(.*?)\s+/',array_shift($output),$matches);
+		if ($c > 0) {
+			return $matches[1];
+		} else return null;
+	}
+
 
 
 	function main() {
@@ -97,14 +108,21 @@ class checkExternalsMappingsExistTask extends Task {
 			}
 
 			$branchRef = explode('/',$frb['branch']);
-			$svnRef = $branchRef[1];
+			$svnRef = array_pop($branchRef);
+			$branchOrTag = array_shift($branchRef);
+
 			$found = $this->lsRemote($gitURL,$svnRef);
 			if (!$found) {
 				echo "module '$mname' found, but branch/tag '$svnRef' cannot be found in git refs. Can't switch to git/piston\n";
 				unset($externalsArray[$mname]);
 				continue;
 			} else {
-				$mnameToBranchName[$mname] = $svnRef;
+				if ($branchOrTag == "tags") {
+					$hash = $this->lsRemoteLookup($gitURL, $svnRef);
+					$mnameToBranchName[$mname] = $hash;
+				} else {    //branch
+					$mnameToBranchName[$mname] = $svnRef;
+				}
 			}
 		}
 
