@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Installation instructions:
+
+sudo pear install phing
+sudo pear install VersionControl_Git-0.4.4
+phing help
+
+-->
+
+<project name="piston-migrator" default="migrate" phingVersion="2.4.5">
+	<property name="basedir" value="." override="true" />
+	<property name="basedirParent" value=".." override="true" />
+	<property name="mappingsFile" value="mappings" override="true" />
+
+	<taskdef name="parseExternalsTask" classname="parseExternalsTask" classpath="${project.basedir}" />
+	<taskdef name="checkExternalsMappingsExistTask" classname="checkExternalsMappingsExistTask" classpath="${project.basedir}" />
+	<taskdef name="svnRemoveExternalsTask" classname="svnRemoveExternalsTask" classpath="${project.basedir}" />
+	<taskdef name="svnCommitExternalsTask" classname="svnCommitExternalsTask" classpath="${project.basedir}" />
+
+	<!-- checks which externals are currently set -->
+	<target name="getExternals1">
+		<exec command="svn propget svn:externals ." dir="${basedirParent}" outputProperty="externals1" checkreturn="false" />
+	</target>
+
+	<target name="readMappingsFile">
+		<exec command="cat ${mappingsFile}" dir="${basedir}" outputProperty="mappings" checkreturn="false" />
+	</target>
+
+	<target name="deleteFolderTask" if="dir">
+		<exec command="rm -r -f ${dir}" dir="${basedirParent}" outputProperty="delete1" checkreturn="false" />
+		<echo msg="Deleted ${dir} ${delete1}"/>
+	</target>
+
+	<target name="pistonImportTask" if="pistonCommand">
+		<!--<exec command="${pistonCommand}" dir="${basedirParent}" outputProperty="piston1" checkreturn="false" />
+		<echo msg="Piston import complete ${piston1}"/>-->
+		<echo msg="Piston command: ${pistonCommand}"/>
+	</target>
+
+	<!-- MAIN CALLABLE TARGETS START HERE -->
+
+	<target name="parseExternals" depends="getExternals1">
+		<!-- read in the existing externals -->
+		<parseExternalsTask externals="${externals1}" />
+	</target>
+
+	<target name="checkExternalsMappingsExist" depends="readMappingsFile,parseExternals">
+		<!-- generate all the commands to run -->
+		<checkExternalsMappingsExistTask mappings="${mappings}" externals="${externals2}"/>
+	</target>
+
+	<!-- task to rewrite the svn externals list to not include the modules that will be replaced by piston -->
+	<target name="svnReplaceExternals" depends="checkExternalsMappingsExist">
+		<echo msg="Will preg_replace the following in the svn:externals file: ${svnPregReplaceCommand}"/>
+		<echo msg="Will delete the following folders: ${foldersToRemove}"/>
+		<echo msg="Will commit the updated externals: svn commit -m 'API-CHANGE: removing externals: ${foldersToRemove}'"/>
+		<echo msg="Will run the following piston commands: ${pistonCommands}"/>
+		<input propertyName="continue" validArgs="yes,no" promptChar=":">Would you like to continue and execute these steps?</input>
+
+		<if>
+			<istrue value="${continue}"/>
+			<then>
+				<!-- set new svn externals -->
+				<svnRemoveExternalsTask externals="${externals1}" regex="${svnPregReplaceCommand}" base="${basedirParent}" />
+
+				<!-- delete svn external folders -->
+				<foreach list="${foldersToRemove}" param="dir" target="deleteFolderTask" />
+
+				<!-- commit new externals -->
+				<svnCommitExternalsTask base="${basedirParent}" list="${foldersToRemove}"/>
+		
+				<!-- import the new externals using piston -->
+				<foreach list="${pistonCommands}" param="pistonCommand" target="pistonImportTask" delimiter="\n" />
+			</then>
+			<else>
+				<echo msg="Aborting"/>
+			</else>
+		</if>
+	</target>
+
+	<target name="migrate">
+		<phingCall target="svnReplaceExternals" />
+	</target>
+
+</project>
