@@ -37,6 +37,14 @@ phing help
 		<echo msg="Piston import complete ${piston1}"/>
 	</target>
 
+	<target name="svnInfo">
+		<exec command="svn info" dir="${basedirParent}" outputProperty="svnInfoOutput" checkreturn="false" />
+		<echo msg="Current SVN revision: ${svnInfoOutput}" />
+
+		<exec command="svn propget svn:externals" dir="${basedirParent}" outputProperty="svnExternalsOutput" checkreturn="false" />
+		<echo msg="Current SVN externals: ${svnExternalsOutput}" />
+	</target>
+
 	<!-- MAIN CALLABLE TARGETS START HERE -->
 
 	<target name="parseExternals" depends="getExternals1">
@@ -51,11 +59,13 @@ phing help
 
 	<!-- task to rewrite the svn externals list to not include the modules that will be replaced by piston -->
 	<target name="svnReplaceExternals" depends="checkExternalsMappingsExist" if="svnPregReplaceCommand,foldersToRemove,pistonCommands">
+		<phingCall target="svnInfo" />
+		
 		<echo msg="Will preg_replace the following in the svn:externals file: ${svnPregReplaceCommand}"/>
 		<echo msg="Will delete the following folders: ${foldersToRemove}"/>
 		<echo msg="Will commit the updated externals: svn commit -m 'API-CHANGE: removing externals: ${foldersToRemove}'"/>
 		<echo msg="Will run the following piston commands: ${pistonCommands}"/>
-		<input propertyName="continue" validArgs="yes,no" promptChar=":">Would you like to continue and execute these steps?</input>
+		<input propertyName="continue" validArgs="yes,no" promptChar=":">Would you like to continue and execute these steps (warning: answering 'yes' will commit changes to your svn repository)?</input>
 
 		<if>
 			<istrue value="${continue}"/>
