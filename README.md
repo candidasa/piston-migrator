@@ -13,9 +13,24 @@ Ideally, we combined this work with upgrading of the project to the latest versi
 The way to handle switching from a project branch is to first change the svn:externals to a branch or tag (who's equivalent can be found on github), then run the script, then re-apply all the commits in the project branch, as necessary.
 
 ## Installation
+Requirements:
+
+* PHP: http://php.net/manual/en/install.php
+* Git: http://book.git-scm.com/2_installing_git.html
+* Subversion: http://subversion.apache.org/
+
+* Ruby Gem: http://fak3r.com/geek/ruby-on-rails-gem-install-versus-apt-get/
+* Pear: http://pear.php.net/manual/en/installation.getting.php
+
+
 Install this script by running the following commands:
 
-	sudo pear install phing
+	sudo gem install piston
+	
+	sudo pear upgrade --force PEAR
+	sudo pear channel-discover pear.phing.info
+	sudo pear install phing/phing
+
 	git clone git://github.com/candidasa/piston-migrator.git piston-migrator
 
 Then run the script by running:
