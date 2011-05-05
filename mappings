@@ -52,3 +52,10 @@ promospots git://github.com/silverstripe-labs/silverstripe-promospots.git
 moderation git://github.com/silverstripe-labs/silverstripe-moderation.git
 peruseraccess git://github.com/silverstripe-labs/silverstripe-peruseraccess.git
 concurrentediting git://github.com/silverstripe-labs/silverstripe-concurrentediting.git
+rssaggregator git://github.com/sminnee/silverstripe-rssaggregator.git
+genericviews git://github.com/chillu/silverstripe-genericviews.git
+emailpipe git://github.com/chillu/silverstripe-emailpipe.git
+recaptcha git://github.com/chillu/silverstripe-recaptcha.git
+tagfield git://github.com/chillu/silverstripe-tagfield.git
+sqlite3 git://github.com/smindel/silverstripe-sqlite3.git
+opensearchclient git://github.com/chillu/opensearchclient.git
