@@ -17,6 +17,7 @@ phing help
 	<taskdef name="checkExternalsMappingsExistTask" classname="checkExternalsMappingsExistTask" classpath="${project.basedir}" />
 	<taskdef name="svnRemoveExternalsTask" classname="svnRemoveExternalsTask" classpath="${project.basedir}" />
 	<taskdef name="svnCommitExternalsTask" classname="svnCommitExternalsTask" classpath="${project.basedir}" />
+	<taskdef name="commandExistsTask" classname="commandExistsTask" classpath="${project.basedir}" />
 
 	<!-- checks which externals are currently set -->
 	<target name="getExternals1">
@@ -45,6 +46,10 @@ phing help
 		<echo msg="Current SVN externals: ${svnExternalsOutput}" />
 	</target>
 
+	<target name="commandExistsTask">
+		<commandExistsTask checkCommand="${checkCommand}" />
+	</target>
+
 	<!-- MAIN CALLABLE TARGETS START HERE -->
 
 	<target name="parseExternals" depends="getExternals1">
@@ -57,8 +62,14 @@ phing help
 		<checkExternalsMappingsExistTask mappings="${mappings}" externals="${externals2}"/>
 	</target>
 
+	<target name="checkNecessaryCommandsExist" >
+		<!-- check if these commands are available in the system -->
+		<property name="checkCommands" value="svn,git,piston" />
+		<foreach list="${checkCommands}" param="checkCommand" target="commandExistsTask" />
+	</target>
+
 	<!-- task to rewrite the svn externals list to not include the modules that will be replaced by piston -->
-	<target name="svnReplaceExternals" depends="checkExternalsMappingsExist" if="svnPregReplaceCommand,foldersToRemove,pistonCommands">
+	<target name="svnReplaceExternals" depends="checkNecessaryCommandsExist,checkExternalsMappingsExist" if="svnPregReplaceCommand,foldersToRemove,pistonCommands">
 		<phingCall target="svnInfo" />
 		
 		<echo msg="Will preg_replace the following in the svn:externals file: ${svnPregReplaceCommand}"/>

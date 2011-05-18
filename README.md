@@ -18,10 +18,9 @@ Requirements:
 * PHP: http://php.net/manual/en/install.php
 * Git: http://book.git-scm.com/2_installing_git.html
 * Subversion: http://subversion.apache.org/
-
 * Ruby Gem: http://fak3r.com/geek/ruby-on-rails-gem-install-versus-apt-get/
 * Pear: http://pear.php.net/manual/en/installation.getting.php
-
+* Piston: http://piston.rubyforge.org/index.html
 
 Install this script by running the following commands:
 
